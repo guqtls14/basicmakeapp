@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController { // UIviewController class를 상속해서 사용하고있음
 
     @IBOutlet weak var mainLabel: UILabel!
     
@@ -15,7 +15,7 @@ class ViewController: UIViewController {
   
     
     
-    override func viewDidLoad() {
+    override func viewDidLoad() { // UIviewController 재정의
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
