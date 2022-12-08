@@ -44,7 +44,7 @@ class ViewController: UIViewController {
     
     @IBAction func startButtonTapped(_ sender: UIButton) {
 //        1초씩 지나갈때마다 무언가를 실행
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _ in // weak self여도됨
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _  in // weak self여도됨
 //            원래 클로저에서 self를 붙이는게 정석이지만, 너무 불편하므로 [self] 를 해주면 self안해도됨(만약 [self]없다면 self무조건 해야함
             
             // do something here
