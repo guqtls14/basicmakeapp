@@ -9,8 +9,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let emailTextFieldView = UIView() // 메모리에 올리는 코드
-    
+//    let emailTextFieldView = UIView() // 메모리에 올리는 코드
+    let emailTextFieldView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.brown
+        
+//        모서리 둥글게
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        
+        
+        return view
+    }() // 메모리에 올리는 코드, 클로저형태로 처리하고 실무에서 많이 사용하는 방식
     
     
     
@@ -24,11 +35,11 @@ class ViewController: UIViewController {
     }
     
     func makeUI() {
-        emailTextFieldView.backgroundColor = UIColor.brown
-        
-//        모서리 둥글게
-        emailTextFieldView.layer.cornerRadius = 10
-        emailTextFieldView.layer.masksToBounds = true
+//        emailTextFieldView.backgroundColor = UIColor.brown
+//
+////        모서리 둥글게
+//        emailTextFieldView.layer.cornerRadius = 10
+//        emailTextFieldView.layer.masksToBounds = true
         
         
         view.addSubview(emailTextFieldView) // 기본 view안에 하위 view안에 넣어야 화면에 나옴, 근데 이 상태는 올려놓은 상태이므로 오토레이아웃까지 잡아야함
