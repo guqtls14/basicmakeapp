@@ -132,13 +132,18 @@ class ViewController: UIViewController {
     private let textViewHeight: CGFloat = 48
     
     // 오토레이아웃 향후 변경을 위한 변수(애니메이션)
-//    lazy var emailInfoLabelCenterYConstraint = emailInfoLabel.centerYAnchor.constraint(equalTo: emailTextFieldView.centerYAnchor)
-//    lazy var passwordInfoLabelCenterYConstraint = passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordTextFieldView.centerYAnchor)
+    lazy var emailInfoLabelCenterYConstraint = emailInfoLabel.centerYAnchor.constraint(equalTo: emailTextFieldView.centerYAnchor)
+    lazy var passwordInfoLabelCenterYConstraint = passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordTextFieldView.centerYAnchor)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextField.delegate = self // extension으로 자신을 확장해서 만든 deletegate이므로 self
+        passwordTextField.delegate = self
+        
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.gray
+        
         
         
         makeUI()
@@ -164,8 +169,9 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             emailInfoLabel.leadingAnchor.constraint(equalTo: emailTextFieldView.leadingAnchor, constant: 8 ),
             emailInfoLabel.trailingAnchor.constraint(equalTo: emailTextFieldView.trailingAnchor, constant: 8),
-    //        가운데 맞추기
-            emailInfoLabel.centerYAnchor.constraint(equalTo: emailTextFieldView.centerYAnchor),
+//        가운데 맞추기, 애니메이션 쓰려면 지워줘야함
+//            emailInfoLabel.centerYAnchor.constraint(equalTo: emailTextFieldView.centerYAnchor),
+            emailInfoLabelCenterYConstraint,
             
             
             emailTextField.leadingAnchor.constraint(equalTo: emailTextFieldView.leadingAnchor, constant: 8),
@@ -176,7 +182,8 @@ class ViewController: UIViewController {
             
             passwordInfoLabel.leadingAnchor.constraint(equalTo: passwordTextFieldView.leadingAnchor, constant: 8),
             passwordInfoLabel.trailingAnchor.constraint(equalTo: passwordTextFieldView.trailingAnchor, constant: -8),
-            passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordTextFieldView.centerYAnchor),
+//            passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordTextFieldView.centerYAnchor),
+            passwordInfoLabelCenterYConstraint,
             
             passwordTextField.topAnchor.constraint(equalTo: passwordTextFieldView.topAnchor, constant: 15),
             passwordTextField.bottomAnchor.constraint(equalTo: passwordTextFieldView.bottomAnchor, constant: 2),
@@ -273,5 +280,57 @@ class ViewController: UIViewController {
         passwordTextField.isSecureTextEntry.toggle() // true는 비밀번호 가림
     }
     
+    
 }
+//    viewController에 바로 채택해도되지만, 확장으로 하는것이 일반점
 
+extension ViewController: UITextFieldDelegate {
+    // MARK: - 텍스트필드 편집 시작할때의 설정 - 문구가 위로올라가면서 크기 작아지고, 오토레이아웃 업데이트
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        if textField == emailTextField {
+            emailTextFieldView.backgroundColor = #colorLiteral(red: 0.2972877622, green: 0.2973434925, blue: 0.297280401, alpha: 1)
+            emailInfoLabel.font = UIFont.systemFont(ofSize: 11)
+            // 오토레이아웃 업데이트
+            emailInfoLabelCenterYConstraint.constant = -13
+        }
+        
+        if textField == passwordTextField {
+            passwordTextFieldView.backgroundColor = #colorLiteral(red: 0.2972877622, green: 0.2973434925, blue: 0.297280401, alpha: 1)
+            passwordInfoLabel.font = UIFont.systemFont(ofSize: 11)
+            // 오토레이아웃 업데이트
+            passwordInfoLabelCenterYConstraint.constant = -13
+        }
+        
+        // 실제 레이아웃 변경은 애니메이션으로 줄꺼야
+        UIView.animate(withDuration: 0.3) {
+            self.stackView.layoutIfNeeded()
+        }
+    }
+    
+    // 텍스트필드 편집 종료되면 백그라운드 색 변경 (글자가 한개도 입력 안되었을때는 되돌리기)
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == emailTextField {
+            emailTextFieldView.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
+            // 빈칸이면 원래로 되돌리기
+            if emailTextField.text == "" {
+                emailInfoLabel.font = UIFont.systemFont(ofSize: 18)
+                emailInfoLabelCenterYConstraint.constant = 0
+            }
+        }
+        if textField == passwordTextField {
+            passwordTextFieldView.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
+            // 빈칸이면 원래로 되돌리기
+            if passwordTextField.text == "" {
+                passwordInfoLabel.font = UIFont.systemFont(ofSize: 18)
+                passwordInfoLabelCenterYConstraint.constant = 0
+            }
+        }
+        
+        // 실제 레이아웃 변경은 애니메이션으로 줄꺼야
+        UIView.animate(withDuration: 0.3) {
+            self.stackView.layoutIfNeeded()
+        }
+    }
+}
